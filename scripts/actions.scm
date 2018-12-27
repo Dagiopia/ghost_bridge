@@ -41,6 +41,8 @@
 (define soma "soma")
 (define soma-cancel "soma-cancel")
 
+(define sing "sing")
+
 ; -------------------------------------------------------------
 ; Vary the values of parameters of different components
 ;
@@ -357,6 +359,23 @@
     (GroundedPredicate "py:soma_cancel")
     (ListLink
      (Variable "$name")))
+  )))
+
+; -------------------------------------------------------------
+; Make Sophia sing
+;
+; Example usage:
+;   (cog-execute! (Put (DefinedSchema "sing") (List)))
+;
+
+(delete-definition sing)
+(DefineLink
+ (DefinedSchema sing)
+ (LambdaLink
+  (SequentialAndLink
+   (EvaluationLink
+    (GroundedPredicate "py:sing")
+    (List))
   )))
 
 
