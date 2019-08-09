@@ -19,31 +19,13 @@
 
 (load "load-actions.scm")
 
-(ecan-based-ghost-rules #t)
 (set-relex-server-host)
-
 (start-cogserver "opencog.conf")
 (cog-logger-set-stdout! #f)
 
 ; load and start the ghost-bridge-action-node
 (use-modules (opencog ghost-bridge-action-node))
 (start-ghost-bridge-action-node)
-
-(define SPREADING_FILTER (ConceptNode "SPREADING_FILTER"))
-
-(define-public (ecan-set-spreading-filter . type-symbols)
-"
-  ecan-set-spreading-filter TYPE-SYMBOLS
-  Set ecan to filter atoms of TYPE-SYMOBLS.
-"
-  (if (not (null? type-symbols))
-    (StateLink
-      SPREADING_FILTER
-      (MemberLink
-        (map (lambda (x) (TypeNode (symbol->string x))) type-symbols))))
-
-  SPREADING_FILTER
-)
 
 (define (ghost-set-ecan-filter . add-types)
   (apply ecan-set-spreading-filter
@@ -60,11 +42,16 @@
     'GroundedPredicateNode)
 )
 
-; apply ECAN filter
-(ec)
+; Handle command-line arguments
+(when (and (equal? 2 (length (command-line)))
+           (equal? "enable-ecan" (cadr (command-line))))
+  ; apply ECAN filter
+  (ec)
 
-; start the ECAN agents
-(system (string-append "echo \"" start-ecan-agents "\" | nc localhost 17001"))
+  ; start the ECAN agents
+  (system (string-append "echo \"" start-ecan-agents
+    "\" | nc localhost 17001"))
+)
 
 ; start recording perception inputs after a delay of few seconds.
 (sleep 5)
